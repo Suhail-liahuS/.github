@@ -1,0 +1,33 @@
+name: nix-check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nix-check:
+    name: nix-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v14
+
+      - name: Run flake checks if present
+        shell: bash
+        run: |
+          if [[ -f flake.nix ]]; then
+            nix flake check --all-systems --print-build-logs
+          else
+            echo "No flake.nix found; nothing to check in this repository."
+          fi
