@@ -1,36 +1,54 @@
+# ---------------------------------------------------------------------------- #
+# Dependabot configuration
+# Security-first, low-noise configuration
+# ---------------------------------------------------------------------------- #
+
 version: 2
+
 updates:
-  # GitHub Actions updates (safe to keep)
+  # -------------------------------------------------------------------------- #
+  # GitHub Actions
+  # -------------------------------------------------------------------------- #
+  # Safe to keep enabled — prevents workflow supply chain drift.
+  # Groups minor/patch updates together to reduce PR noise.
+  # Major updates still require manual review.
+  # -------------------------------------------------------------------------- #
   - package-ecosystem: "github-actions"
-    directory: "/" 
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    # group minor/patch updates together:
-    groups:
-      default:
-        patterns:
-          - ".*"
-  # Example for npm (if you have a package.json)
-  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    # example: ignore major version upgrades to avoid surprise breakage
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "*"
         update-types:
           - "version-update:semver-major"
-  # Security-only version updates handled separately (enabled in repo settings)
-  
+
+  # -------------------------------------------------------------------------- #
+  # Application Dependencies (Example: npm)
+  # -------------------------------------------------------------------------- #
+  # Version updates are intentionally conservative.
+  # Major updates ignored to prevent breaking changes.
+  # Security updates are handled automatically via repository settings.
+  # -------------------------------------------------------------------------- #
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
 # ---------------------------------------------------------------------------- #
-
-# This assumes:
-# You use github-actions and maybe some language (replace or add ecosystems as needed).
-# You do not list Nix flakes here; use a flake-update action instead.
-
 # Notes:
-# Add one block per ecosystem/directory you need.
-# Adjust open-pull-requests-limit, groups, and ignore to suit the churn you want.
-# For monorepos, add multiple directory entries.
+# - Security updates are enabled via repository settings (Dependabot security updates).
+# - Add additional ecosystems below as needed (pip, docker, go, etc.).
+# - For monorepos, duplicate blocks with different `directory` paths.
+# - Nix flakes should be updated via a flake-update workflow instead.
+# ---------------------------------------------------------------------------- #
