@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # GitHub Actions updates (safe to keep)
+  - package-ecosystem: "github-actions"
+    directory: "/" 
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    # group minor/patch updates together:
+    groups:
+      default:
+        patterns:
+          - ".*"
+  # Example for npm (if you have a package.json)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # example: ignore major version upgrades to avoid surprise breakage
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+  # Security-only version updates handled separately (enabled in repo settings)
