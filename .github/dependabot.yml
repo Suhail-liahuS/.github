@@ -23,3 +23,14 @@ updates:
         update-types:
           - "version-update:semver-major"
   # Security-only version updates handled separately (enabled in repo settings)
+  
+# ---------------------------------------------------------------------------- #
+
+# This assumes:
+# You use github-actions and maybe some language (replace or add ecosystems as needed).
+# You do not list Nix flakes here; use a flake-update action instead.
+
+# Notes:
+# Add one block per ecosystem/directory you need.
+# Adjust open-pull-requests-limit, groups, and ignore to suit the churn you want.
+# For monorepos, add multiple directory entries.
